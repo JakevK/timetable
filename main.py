@@ -48,31 +48,35 @@ box_top = height - (box_height * (2/3)) - box_height
 draw.rectangle((0, box_top, width, box_height + box_top), \
     fill=(255, 255, 255, 127), outline=(50, 50, 50), width=3)
 
+
 timetable = scrape.get_timetable()
+
+period_width = width / len(timetable)
+period_margin = period_width / 13
+
+fontsize = 1
+subject_font = ImageFont.truetype('fonts/Product Sans Bold.ttf', fontsize)
+while subject_font.getsize('WWWWWW')[0] < (period_width - (period_margin * 2)):
+    fontsize += 1
+    subject_font = ImageFont.truetype("fonts/Product Sans Bold.ttf", fontsize)
+
+fontsize = 1
+teacher_font = ImageFont.truetype('fonts/Product Sans Regular.ttf', fontsize)
+while teacher_font.getsize('WWW WW')[0] < ((period_width * (3/4)) - (period_margin * 2)):
+    fontsize += 1
+    teacher_font = ImageFont.truetype("fonts/Product Sans Regular.ttf", fontsize)
 
 
 for i, day in enumerate(timetable):
     for j, period in enumerate(day):
+        period_height = box_height / len(day)
         pos_x = (width / len(timetable)) * i
         pos_y = (box_height / len(day)) * j + box_top
-        period_width = width / len(timetable)
-        period_margin = period_width / 13
-        period_height = box_height / len(day)
         draw.rectangle( \
             (pos_x, pos_y, pos_x + period_width, pos_y + period_height), \
             outline=(50, 50, 50), width=3)
-        fontsize = 1
-        font = ImageFont.truetype('fonts/Product Sans Bold.ttf', fontsize)
-        while font.getsize('WWWWWW')[0] < (period_width - (period_margin * 2)):
-            fontsize += 1
-            font = ImageFont.truetype("fonts/Product Sans Bold.ttf", fontsize)
-        draw.text((pos_x + period_margin, pos_y + period_margin + (period_height * (1/8))), period.subject, font=font, fill=(50, 50, 50))
-        fontsize = 1
-        font = ImageFont.truetype('fonts/Product Sans Regular.ttf', fontsize)
-        while font.getsize('WWW WW')[0] < ((period_width * (3/4)) - (period_margin * 2)):
-            fontsize += 1
-            font = ImageFont.truetype("fonts/Product Sans Regular.ttf", fontsize)
-        draw.text((pos_x + period_margin, pos_y + period_margin + (period_height / 2)), str(period.teacher) + ' - ' + str(period.room), font=font, fill=(50, 50, 50))
+        draw.text((pos_x + period_margin, pos_y + period_margin + (period_height * (1/8))), period.subject, font=subject_font, fill=(50, 50, 50))
+        draw.text((pos_x + period_margin, pos_y + period_margin + (period_height / 2)), str(period.teacher) + ' - ' + str(period.room), font=teacher_font, fill=(50, 50, 50))
 
 
 result = Image.alpha_composite(cropped, overlay_img)
