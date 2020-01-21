@@ -2,6 +2,8 @@ from PIL import Image, ImageDraw, ImageFont
 import sys
 import requests
 from io import BytesIO
+from classes import Period
+import scrape
 
 
 
@@ -26,12 +28,6 @@ def crop(image, target_dimensions):
     return image.crop((left, top, right, bottom))
 
 
-class Period:
-    def __init__(self, subject='', teacher='', room=''):
-        self.subject = subject
-        self.teacher = teacher
-        self.room = room
-
 
 dimensions = (750, 1334)
 
@@ -52,13 +48,7 @@ box_top = height - (box_height * (2/3)) - box_height
 draw.rectangle((0, box_top, width, box_height + box_top), \
     fill=(255, 255, 255, 127), outline=(50, 50, 50), width=3)
 
-timetable = [
-    [Period('DIG201', 'THA', 'C5'), Period('PHY201', 'NMG', 'A2'), Period('CHE201', 'PTD', 'A8'), Period('SPA201', 'CAL', 'D3'), Period('ENL201', 'ADB', 'R5')],
-    [Period('SPA201', 'CAL', 'D3'), Period('ENL201', 'ADB', 'R5'), Period('MAC301', 'FLS', 'M7'), Period('DIG201', 'THA', 'C5'), Period('PHY201', 'NMG', 'A2')],
-    [Period('MAC301', 'FLS', 'M7'), Period('CHE201', 'PTD', 'A8'), Period('DIG201', 'THA', 'C5'), Period('PHY201', 'NMG', 'A2'), Period('SPA201', 'CAL', 'D3')],
-    [Period('ENL201', 'ADB', 'R5'), Period('MAC301', 'FLS', 'M7'), Period('PHY201', 'NMG', 'A2'), Period('CHE201', 'PTD', 'A8'), Period('DIG201', 'THA', 'C5')],
-    [Period('CHE201', 'PTD', 'A8'), Period('LIF201', 'TOK', 'R7'), Period('SPA201', 'CAL', 'D3'), Period('ENL201', 'ADB', 'R5'), Period('MAC301', 'FLS', 'M7')]
-]
+timetable = scrape.get_timetable()
 
 
 for i, day in enumerate(timetable):
