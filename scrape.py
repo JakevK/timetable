@@ -4,11 +4,23 @@ from selenium.webdriver.common.by import By
 import passwords
 from classes import Period
 import json
+from selenium.webdriver.chrome.options import Options
+import os
+"""
+chrome_options = Options()
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--headless')
+"""
 
-driver = webdriver.Chrome()
+
+options = Options()
+options.add_argument('--no-sandbox')
+options.add_argument("--disable-setuid-sandbox")
+
 
 
 def get_timetable():
+    driver = webdriver.Chrome(chrome_options=options)
     driver.get("https://learn.cashmere.school.nz/auth/saml/")
     assert "Sign In" in driver.title
 
